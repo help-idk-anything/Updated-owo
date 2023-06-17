@@ -10,7 +10,7 @@ import os from "os"
 
 import { collectData } from "./lib/DataCollector.js"
 import { log } from "./lib/console.js"
-import { commandHandler, randomInt, reloadPresence, sleep, solveCaptcha, timeHandler } from "./lib/extension.js"
+import { commandHandler, randomInt, sleep, solveCaptcha, timeHandler } from "./lib/extension.js"
 import { main, notify } from "./lib/SelfbotWorker.js"
 
 //define variables
@@ -61,12 +61,10 @@ process.on("SIGINT", function () {
     .on("ready", async () => {
         log("\x1b[94mLogged In As " + client.user.tag, "i")
         global.startTime = new Date();
-        reloadPresence(client);
         if(global.config.cmdPrefix) await commandHandler()
         global.channel = client.channels.cache.get(global.config.channelID[0]);
         main();
     })
-    .on("shardReady", () => reloadPresence(client))
     .on("messageCreate", async (message) => {
         if(message.author.id == global.owoID) {
             if((message.content.includes(message.client.user.username) && message.content.match(/(check|verify) that you are.{1,3}human!/igm)) || (message.content.includes('Beep Boop') && message.channel.type == 'DM')) {
